@@ -16,10 +16,12 @@ namespace Shopping.Web.Models
         public decimal Price{ get; set; }
         public decimal? Discount { get; set; }
         public bool isNew { get; set; }
+        public bool IsFeatured{ get; set; }
         public DateTime PublishDate { get; set; }
+        public int Count { get; set; }
         public int CategoryID { get; set; }
         public  virtual Category Category { get; set; }
-        public List<ProductPicture> ProductPictures { get; set; }
+        public virtual List<ProductPicture> ProductPictures { get; set; }
 
 
 

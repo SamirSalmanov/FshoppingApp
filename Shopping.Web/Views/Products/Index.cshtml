@@ -1,0 +1,312 @@
+﻿    <!-- breadcrumb-area start -->
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="row breadcrumb_box  align-items-center">
+                    <div class="col-lg-6 col-md-6 col-sm-12 text-center text-md-left">
+                        <h2 class="breadcrumb-title">Shop</h2>
+                    </div>
+                    <div class="col-lg-6  col-md-6 col-sm-12">
+                        <!-- breadcrumb-list start -->
+                        <ul class="breadcrumb-list text-center text-md-right">
+                            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                            <li class="breadcrumb-item active">Shop</li>
+                        </ul>
+                        <!-- breadcrumb-list end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- breadcrumb-area end -->
+<!-- Shop Category pages -->
+<div class="shop-category-area pb-100px pt-70px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 order-lg-last col-md-12 order-md-first">
+                @if (Model.Products != null && Model.Products.Count > 0)
+                {
+
+                    <!-- Shop Top Area Start -->
+                    <div class="shop-top-bar d-flex">
+                        <!-- Left Side start -->
+                        <p>There Are @(Model.Product.Count) Products.</p>
+                        <!-- Left Side End -->
+                        <!-- Right Side Start -->
+                        <div class="select-shoing-wrap d-flex align-items-center">
+                            <div class="shot-product">
+                                <p>Sort By:</p>
+                            </div>
+                            <div class="shop-select">
+                                <select class="shop-sort">
+                                    <option value="@Url.Action("index", "product")" data-display="Yeni Mehsullar">Yeni Mehsullar</option>
+                                    <option selected="@(Model.SortBy == 1)" value="@Url.Action("index", "product", new { sortBy = 1, categoryId = Model.CategoryID })"> Name, A to Z</option>
+                                    <option selected="@(Model.SortBy == 3)" value="@Url.Action("index", "product", new { sortBy = 1, categoryId = Model.CategoryID })"> Price, low to high</option>
+                                    <option selected="@(Model.SortBy == 4)" value="@Url.Action("index", "product", new { sortBy = 1, categoryId = Model.CategoryID })"> Price, high to low</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <!-- Right Side End -->
+                    </div>
+                    <!-- Shop Top Area End -->
+                    <!-- Shop Bottom Area Start -->
+                    <div class="shop-bottom-area">
+
+                        <div class="row">
+                            @foreach (var cat in Model.Categories)
+                            {
+                                <!-- Banner Start -->
+                                <div class="col-lg-4 col-12 mb-md-30px mb-lm-30px" data-aos="fade-up" data-aos-delay="200">
+                                    <div class="banner-2">
+                                        <img src="~/uploads/@cat.PictureUrl" alt="" />
+                                        <div class="info justify-content-start">
+                                            <div class="content align-self-center">
+                                                <h3 class="title" style="width:70%">
+                                                    @(cat.Name.Length > 50 ? @cat.Name.Substring(0, 50) : cat.Name )
+                                                </h3>
+                                                <a href="shop-left-sidebar.html" class="shop-link">Shop Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Banner End -->
+                            }
+                        </div>
+                        <!--  Pagination Area Start -->
+                        <div class="pro-pagination-style text-center mb-md-30px mb-lm-30px mt-6" data-aos="fade-up">
+                            <ul>
+                                @if (Model.CurrentPage == 1)
+                                {
+                                    <li>
+                                        <a class="prev" href="@Url.Action("index","products",new { pageNo = Model.CurrentPage-1,sortBy=Model.SortBy, categoryId=Model.Category.ID  })"><i class="ion-ios-arrow-left"></i></a>
+                                    </li>
+                                }
+
+                                @for (int p = 1; p <Model.EndPage; p++)
+                                {
+                                    <li><a class="@Url.Action("index","products",new { pageNo = p,sortBy=Model.SortBy, categoryId=Model.Category.ID })">@p</a></li>
+
+                                }
+                                <li><a href="active" href="#">2</a></li>
+                                @if (Model.EndPage <= Model.CurrentPage)
+                                {
+                                    <li>
+                                        <a class="next disabled"><i class="ion-ios-arrow-right"></i></a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a class="next" href="@Url.Action("index","products",new { pageNo = Model.CurrentPage+1,sortBy=Model.SortBy, categoryId=Model.Category.ID  })"><i class="ion-ios-arrow-left"></i></a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                        <!--  Pagination Area End -->
+                    </div>
+                    <!-- Shop Bottom Area End -->
+
+                }
+                else
+                {
+                    <p class="alert alert-warning">Product Not Found</p>
+                }
+            </div>
+            <!-- Sidebar Area Start -->
+            <div class="col-lg-3 order-lg-first col-md-12 order-md-last mb-md-60px mb-lm-60px">
+                <div class="shop-sidebar-wrap">
+                    <!-- Sidebar single item -->
+                    <div class="sidebar-widget">
+                        <div class="main-heading">
+                            <h3 class="sidebar-title">Category</h3>
+                        </div>
+                        <div class="sidebar-widget-category">
+                            <ul>
+                                <li><a href="/products" class="selected cat-active @(Model.CategoryID??"cat-active")">All <span>(@Model.ProductCount)</span> </a></li>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("index","product",new { categoryId=category.ID,sortBy=Model.SortBy})"
+                                           class="@(category.ID==Model.CategoryID?"cat-active":"")">@category.Name <span>(@category.Products.Count)</span> </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Sidebar single item -->
+                    <div class="sidebar-widget-group">
+                        <h3 class="sidebar-title">Filter By</h3>
+                        <div class="sidebar-widget">
+                            <h4 class="pro-sidebar-title">Price</h4>
+                            <div class="price-filter">
+                                <div class="price-slider-amount">
+                                    <input type="text" id="amount" class="p-0 h-auto lh-1" name="price" placeholder="Add Your Price" />
+                                </div>
+                                <div id="slider-range"></div>
+                            </div>
+                        </div>
+                        <!-- Sidebar single item -->
+                        <div class="sidebar-widget">
+                            <h4 class="pro-sidebar-title mt-5">Size</h4>
+                            <div class="sidebar-widget-list">
+                                @*<ul>
+                                        <li>
+                                            <div class="sidebar-widget-list-left">
+                                                <input type="checkbox" /> <a href="#">Large <span>(4)</span> </a>
+                                                <span class="checkmark"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="sidebar-widget-list-left">
+                                                <input type="checkbox" value="" /> <a href="#">
+                                                    Medium
+                                                    <span>(4)</span>
+                                                </a>
+                                                <span class="checkmark"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="sidebar-widget-list-left">
+                                                <input type="checkbox" value="" /> <a href="#">
+                                                    Small <span>(4)</span>
+                                                </a>
+                                                <span class="checkmark"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="sidebar-widget-list-left">
+                                                <input type="checkbox" value="" /> <a href="#">
+                                                    Extra
+                                                    Large<span>(4)</span>
+                                                </a>
+                                                <span class="checkmark"></span>
+                                            </div>
+                                        </li>
+                                    </ul>*@
+                            </div>
+                        </div>
+                        <!-- Sidebar single item -->
+                        <div class="sidebar-widget no-cba">
+                            <h4 class="pro-sidebar-title">Colour</h4>
+                            <div class="sidebar-widget-list">
+                                <ul>
+                                    <li>
+                                        <div class="sidebar-widget-list-left">
+                                            <input type="checkbox" /> <a href="#">Grey<span>(2)</span> </a>
+                                            <span class="checkmark grey"></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="sidebar-widget-list-left">
+                                            <input type="checkbox" value="" /> <a href="#">White<span>(4)</span></a>
+                                            <span class="checkmark white"></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="sidebar-widget-list-left">
+                                            <input type="checkbox" value="" /> <a href="#">
+                                                Black<span>(4)</span>
+                                            </a>
+                                            <span class="checkmark black"></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="sidebar-widget-list-left">
+                                            <input type="checkbox" value="" /> <a href="#">
+                                                Camel<span>(4)</span>
+                                            </a>
+                                            <span class="checkmark camel"></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Sidebar single item -->
+                        <div class="sidebar-widget">
+                            <h4 class="pro-sidebar-title">Brand</h4>
+                            <div class="sidebar-widget-list">
+                                <ul>
+                                    <li>
+                                        <div class="sidebar-widget-list-left">
+                                            <input type="checkbox" /> <a href="#">
+                                                Studio Design<span>(10)</span>
+                                            </a>
+                                            <span class="checkmark"></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="sidebar-widget-list-left">
+                                            <input type="checkbox" value="" /> <a href="#">
+                                                Graphic
+                                                Corner<span>(7)</span>
+                                            </a>
+                                            <span class="checkmark"></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sidebar single item -->
+                    <div class="sidebar-widget tag">
+                        <div class="main-heading">
+                            <h3 class="sidebar-title mt-3">Tags</h3>
+                        </div>
+                        <div class="sidebar-widget-tag">
+                            <ul>
+                                <li><a href="#">All</a></li>
+                                <li><a href="#">Accessories</a></li>
+                                <li><a href="#">Chair</a></li>
+                                <li><a href="#">Decoration</a></li>
+                                <li><a href="#">Furniture</a></li>
+                                <li><a href="#">Sofa</a></li>
+                                <li><a href="#">Table</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Sidebar single item -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{ 
+    var maxCurrentPrice = Model.MaxProductPrice;
+    var minCurrentPrice = 0;
+    maxCurrentPrice = Model.MaxPrice ?? Model.maxCurrentPrice;
+    minCurrentPrice = Model.MinPrice ?? Model.MinCurrentPrice;
+}
+
+@section script{
+<script>
+    $(".shop-sort").change(function () {
+        const sort = $(this).val()
+        window.location.href = sort
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        let myClear;
+        $("#slider-range").slider({
+            range: true,
+            min: 0,
+            max: @(Model.MaxProductPrice),
+            values: [@minCurrentPrice,@maxCurrentPrice],
+            slide: function (event, ui) {
+                $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                clearInterval(myClear)
+                myClear = setTimeout(function(){
+                    window.location.href = `/mehsullar?maxPrice=$"{ui.values[1]}&minPrice=${ui.values[0]}`
+                },1000)
+            }
+        });
+        $("#amount").val("$" + $("#slider-range").slider("values", 0) +
+            " - $" + $("#slider-range").slider("values", 1));
+        });
+</script>
+}

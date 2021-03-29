@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +17,12 @@ namespace Shopping.Web.Areas.K207Admin.Controllers
     public class AdminCategoriesController : Controller
     {
         private readonly ShoppingContext _context;
+        private readonly IWebHostEnvironment _environment;
 
-        public AdminCategoriesController(ShoppingContext context)
+        public AdminCategoriesController(ShoppingContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: K207Admin/AdminCategories
@@ -55,10 +60,19 @@ namespace Shopping.Web.Areas.K207Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,PictureUrl")] Category category)
+        public async Task<IActionResult> Create([Bind("ID,Name,PictureUrl")] Category category,IFormFile PictureUrl)
         {
             if (ModelState.IsValid)
             {
+                if (PictureUrl != null)
+                {
+                    string filename = Guid.NewGuid() + PictureUrl.FileName;
+                    string uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+                    string imageFolder = Path.Combine(uploadsFolder, filename);
+                    using FileStream fileStream = new FileStream(imageFolder, FileMode.Create);
+                    await PictureUrl.CopyToAsync(fileStream);
+                    category.PictureUrl = filename;
+                }
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,7 +101,7 @@ namespace Shopping.Web.Areas.K207Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,PictureUrl")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,PictureUrl")] Category category, IFormFile PictureUrl)
         {
             if (id != category.ID)
             {
@@ -98,6 +112,21 @@ namespace Shopping.Web.Areas.K207Admin.Controllers
             {
                 try
                 {
+                    if (PictureUrl != null)
+                    { 
+
+                        string filename = Guid.NewGuid() + PictureUrl.FileName;
+                        string uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+                        string imageFolder = Path.Combine(uploadsFolder, filename);
+                        using FileStream fileStream = new FileStream(imageFolder, FileMode.Create);
+                        await PictureUrl.CopyToAsync(fileStream);
+                        var oldPicture = Path.Combine(uploadsFolder, category.PictureUrl);
+                        if (System.IO.File.Exists(Path.Combine(oldPicture)))
+                        {
+                            System.IO.File.Delete(oldPicture);
+                        }
+                        category.PictureUrl = filename;
+                    }
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }

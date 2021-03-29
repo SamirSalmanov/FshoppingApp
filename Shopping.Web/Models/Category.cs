@@ -9,8 +9,8 @@ namespace Shopping.Web.Models
     public class Category
     {
         public int ID { get; set; }
-        [Required]
-        public int Name { get; set; }
+        [Required(ErrorMessage ="Adi bos gondermeyin")]
+        public string Name { get; set; }
         public string PictureUrl { get; set; }
         public virtual List<Product> Products { get; set; }
     }

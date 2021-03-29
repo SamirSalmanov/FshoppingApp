@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Shopping.Web.Data;
+using Shopping.Web.Models;
 
 namespace Shopping.Web
 {
@@ -24,6 +26,22 @@ namespace Shopping.Web
             {
                 option.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
+            services.AddDefaultIdentity<SUser>(option=> {
+                option.SignIn.RequireConfirmedEmail = false;
+                option.SignIn.RequireConfirmedAccount = false;
+
+
+            }).AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ShoppingContext>();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/login";
+                options.AccessDeniedPath = "/login";
+
+            });
+            {
+
+            }
             services.AddControllersWithViews();
         }
 
@@ -44,7 +62,7 @@ namespace Shopping.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

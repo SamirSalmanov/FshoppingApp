@@ -1,0 +1,17 @@
+﻿@{ 
+    List<int> basketIds = ViewData["basketId"] as List<int>;
+}
+<a href="#offcanvas-cart" class="header-action-btn header-action-btn-cart offcanvas-toggle pr-0">
+    <i class="icon-handbag"></i>
+    @if (basketIds != null)
+    {
+        <span class="header-action-num">@basketIds.Count()</span>
+    }
+    else
+    {
+        <span class="header-action-num">
+            0
+        </span>
+    }
+    <!-- <span class="cart-amount">€30.00</span> -->
+</a>
