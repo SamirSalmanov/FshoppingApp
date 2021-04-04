@@ -33,7 +33,7 @@
                     <!-- Shop Top Area Start -->
                     <div class="shop-top-bar d-flex">
                         <!-- Left Side start -->
-                        <p>There Are @(Model.Product.Count) Products.</p>
+                        <p>There Are @(Model.Products.Count) Products.</p>
                         <!-- Left Side End -->
                         <!-- Right Side Start -->
                         <div class="select-shoing-wrap d-flex align-items-center">
@@ -44,8 +44,8 @@
                                 <select class="shop-sort">
                                     <option value="@Url.Action("index", "product")" data-display="Yeni Mehsullar">Yeni Mehsullar</option>
                                     <option selected="@(Model.SortBy == 1)" value="@Url.Action("index", "product", new { sortBy = 1, categoryId = Model.CategoryID })"> Name, A to Z</option>
-                                    <option selected="@(Model.SortBy == 3)" value="@Url.Action("index", "product", new { sortBy = 1, categoryId = Model.CategoryID })"> Price, low to high</option>
-                                    <option selected="@(Model.SortBy == 4)" value="@Url.Action("index", "product", new { sortBy = 1, categoryId = Model.CategoryID })"> Price, high to low</option>
+                                    <option selected="@(Model.SortBy == 3)" value="@Url.Action("index", "product", new { sortBy = 3, categoryId = Model.CategoryID })"> Price, low to high</option>
+                                    <option selected="@(Model.SortBy == 4)" value="@Url.Action("index", "product", new { sortBy = 4, categoryId = Model.CategoryID })"> Price, high to low</option>
                                 </select>
 
                             </div>
@@ -57,23 +57,51 @@
                     <div class="shop-bottom-area">
 
                         <div class="row">
-                            @foreach (var cat in Model.Categories)
+                            @foreach (var pro in Model.Products)
                             {
-                                <!-- Banner Start -->
-                                <div class="col-lg-4 col-12 mb-md-30px mb-lm-30px" data-aos="fade-up" data-aos-delay="200">
-                                    <div class="banner-2">
-                                        <img src="~/uploads/@cat.PictureUrl" alt="" />
-                                        <div class="info justify-content-start">
-                                            <div class="content align-self-center">
-                                                <h3 class="title" style="width:70%">
-                                                    @(cat.Name.Length > 50 ? @cat.Name.Substring(0, 50) : cat.Name )
-                                                </h3>
-                                                <a href="shop-left-sidebar.html" class="shop-link">Shop Now</a>
+
+                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 mb-6" data-aos="fade-up" data-aos-delay="200">
+                                    <div class="product">
+                                        <div class="thumb">
+                                            <a href="/Products/Detail/@pro.ID" class="image">
+                                                <img src="@pro.ProductPictures[0].Picture.Url" alt="Product" />
+                                                <img class="hover-image" src="@pro.ProductPictures[1].Picture.Url" alt="Product" />
+                                            </a>
+                                            @if (pro.isNew)
+                                            {
+                                                <span class="badges">
+                                                    <span class="new">New</span>
+                                                </span>
+                                            }
+
+                                            <div class="actions">
+                                                <a href="wishlist.html" class="action wishlist" title="Wishlist">
+                                                    <i class="icon-heart"></i>
+                                                </a>
+                                                <a href="#" class="action quickview" data-samir="@pro.ID" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                    <i class="icon-size-fullscreen"></i>
+                                                </a>
+                                                <a href="compare.html" class="action compare" title="Compare">
+                                                    <i class="icon-refresh"></i>
+                                                </a>
                                             </div>
+                                            @if (pro.Count > 0)
+                                            {
+                                                <button title="Add To Cart" samir="@pro.ID" class=" add-to-cart">
+                                                    Add
+                                                    To Cart
+                                                </button>
+                                            }
+
+                                        </div>
+                                        <div class="content">
+                                            <h5 class="title"><a href="/Products/Detail/@pro.ID">@pro.Name</a></h5>
+                                            <span class="price">
+                                                <span class="new">@pro.Price</span>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Banner End -->
                             }
                         </div>
                         <!--  Pagination Area Start -->
@@ -82,16 +110,21 @@
                                 @if (Model.CurrentPage == 1)
                                 {
                                     <li>
-                                        <a class="prev" href="@Url.Action("index","products",new { pageNo = Model.CurrentPage-1,sortBy=Model.SortBy, categoryId=Model.Category.ID  })"><i class="ion-ios-arrow-left"></i></a>
+                                        <a class="prev disabled"><i class="ion-ios-arrow-left"></i></a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a class="prev" href="@Url.Action("index","products",new { pageNo = Model.CurrentPage-1,sortBy=Model.SortBy, categoryId=Model.CategoryID  })"><i class="ion-ios-arrow-left"></i></a>
                                     </li>
                                 }
 
-                                @for (int p = 1; p <Model.EndPage; p++)
+                                @for (int p = 1; p <= Model.EndPage; p++)
                                 {
-                                    <li><a class="@Url.Action("index","products",new { pageNo = p,sortBy=Model.SortBy, categoryId=Model.Category.ID })">@p</a></li>
+                                    <li><a href="@Url.Action("index","products",new { pageNo = p,sortBy=Model.SortBy, categoryId=Model.CategoryID })" class="">@p</a></li>
 
                                 }
-                                <li><a href="active" href="#">2</a></li>
                                 @if (Model.EndPage <= Model.CurrentPage)
                                 {
                                     <li>
@@ -101,7 +134,7 @@
                                 else
                                 {
                                     <li>
-                                        <a class="next" href="@Url.Action("index","products",new { pageNo = Model.CurrentPage+1,sortBy=Model.SortBy, categoryId=Model.Category.ID  })"><i class="ion-ios-arrow-left"></i></a>
+                                        <a class="next" href="@Url.Action("index","products",new { pageNo = Model.CurrentPage+1,sortBy=Model.SortBy, categoryId=Model.CategoryID  })"><i class="ion-ios-arrow-right"></i></a>
                                     </li>
                                 }
 
@@ -127,11 +160,11 @@
                         </div>
                         <div class="sidebar-widget-category">
                             <ul>
-                                <li><a href="/products" class="selected cat-active @(Model.CategoryID??"cat-active")">All <span>(@Model.ProductCount)</span> </a></li>
+                                <li><a href="/mehsullar" class="selected @(Model.CategoryID??"cat-active")">All <span>(@Model.ProductCount)</span> </a></li>
                                 @foreach (var category in Model.Categories)
                                 {
                                     <li>
-                                        <a href="@Url.Action("index","product",new { categoryId=category.ID,sortBy=Model.SortBy})"
+                                        <a href="@Url.Action("index","products",new { categoryId=category.ID,sortBy=Model.SortBy})"
                                            class="@(category.ID==Model.CategoryID?"cat-active":"")">@category.Name <span>(@category.Products.Count)</span> </a>
                                     </li>
                                 }

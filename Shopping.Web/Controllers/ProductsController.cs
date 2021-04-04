@@ -22,9 +22,9 @@ namespace Shopping.Web.Controllers
 
         public IActionResult Index(int? categoryId, string searchTerm, int? minPrice, int? maxPrice, int? sortBy, int? pageNo)
         {
-            pageNo = pageNo ?? 1;
-            minPrice = minPrice ?? 0;
-            maxPrice = maxPrice ?? (int)_context.Products.Max(x => x.Price);
+            pageNo ??= 1;
+            minPrice ??= 0;
+            maxPrice ??= (int)_context.Products.Max(x => x.Price);
 
             ProductFilterVM vm = new()
             {
@@ -39,7 +39,7 @@ namespace Shopping.Web.Controllers
                 MaxPrice=maxPrice.Value
             };
 
-            vm.EndPage = (int)Math.Ceiling((decimal)count() / 3);
+            vm.EndPage = (int)Math.Ceiling((decimal)count / 3);
 
             return View(vm);
         }
@@ -47,7 +47,7 @@ namespace Shopping.Web.Controllers
         {
             return _context.Products.Count();
         }
-        public List<Product> SearchProducts(int? categoryId,string searchTerm,int? minPrice,int? maxPrice,int? sortBy,out int count)
+        public List<Product> SearchProducts(int? categoryId,string searchTerm,int? minPrice,int? maxPrice,int? sortBy,int pageNo, out int count)
         {
             var productList = _context.Products.AsQueryable();
             if (categoryId.HasValue)

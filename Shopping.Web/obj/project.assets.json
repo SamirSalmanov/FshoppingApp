@@ -7817,19 +7817,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Samir\\.nuget\\packages\\": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Samir\\source\\repos\\ShoppingApp\\Shopping.Web\\Shopping.Web.csproj",
+      "projectUniqueName": "C:\\Users\\user\\Desktop\\ShoppingApp\\Shopping.Web\\Shopping.Web.csproj",
       "projectName": "Shopping.Web",
-      "projectPath": "C:\\Users\\Samir\\source\\repos\\ShoppingApp\\Shopping.Web\\Shopping.Web.csproj",
-      "packagesPath": "C:\\Users\\Samir\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Samir\\source\\repos\\ShoppingApp\\Shopping.Web\\obj\\",
+      "projectPath": "C:\\Users\\user\\Desktop\\ShoppingApp\\Shopping.Web\\Shopping.Web.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\Desktop\\ShoppingApp\\Shopping.Web\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Samir\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
